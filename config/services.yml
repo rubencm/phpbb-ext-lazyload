@@ -1,0 +1,5 @@
+services:
+    rubencm.lazyload.listener:
+        class: rubencm\lazyload\event\listener
+        tags:
+            - { name: event.listener }
