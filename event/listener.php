@@ -37,7 +37,7 @@ class listener implements EventSubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return array(
-			'core.viewtopic_modify_post_action_conditions'	=> 'modify_img_bbcode',
+			'core.text_formatter_s9e_render_after'	=> 'modify_img_bbcode',
 		);
 	}
 
@@ -50,8 +50,6 @@ class listener implements EventSubscriberInterface
 	*/
 	public function modify_img_bbcode($event)
 	{
-		global $message;
-		
-		$message = preg_replace("/<img src=\"(.*?)\" class=\"(.*?)\" alt=\"(.*?)\">/i", "<img data-original=\"$1\" class=\"$2\" alt=\"$3\"><noscript><img src=\"$1\" class=\"$2\" alt=\"$3\"></noscript>", $message);
+		$event['html'] = preg_replace("/<img src=\"(.*?)\" class=\"postimage\" alt=\"(.*?)\">/i", "<img data-original=\"$1\" class=\"postimage\" alt=\"$2\"><noscript><img src=\"$1\" class=\"postimage\" alt=\"$2\"></noscript>", $event['html']);
 	}
 }
