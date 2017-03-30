@@ -10,6 +10,7 @@
 
 namespace rubencm\lazyload\event;
 
+use DOMXPath;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -37,19 +38,36 @@ class listener implements EventSubscriberInterface
 	static public function getSubscribedEvents()
 	{
 		return array(
-			'core.text_formatter_s9e_render_after'	=> 'modify_img_bbcode',
+			'core.text_formatter_s9e_configure_after' => 'modify_img_template',
 		);
 	}
 
 	/**
-	* Modify image BBCode
+	* Modify image BBCode's template
 	*
 	* @param \phpbb\event\data $event The event object
 	* @return void
 	* @access public
 	*/
-	public function modify_img_bbcode($event)
+	public function modify_img_template($event)
 	{
-		$event['html'] = preg_replace("/<img src=\"(.*?)\" class=\"postimage\" alt=\"(.*?)\">/i", "<img data-original=\"$1\" class=\"postimage\" alt=\"$2\"><noscript><img src=\"$1\" class=\"postimage\" alt=\"$2\"></noscript>", $event['html']);
+		$tag   = $event['configurator']->tags['img'];
+		$dom   = $tag->template->asDOM();
+		$xpath = new DOMXPath($dom);
+		foreach ($xpath->query('//img[@src]') as $img)
+		{
+			// Create a <noscript> element that contains a copy of the original <img>
+			$noscript = $dom->createElement('noscript');
+			$noscript->appendChild($img->cloneNode(true));
+
+			// Replace the src attribute with a data-original attribute
+			$img->setAttribute('data-original', $img->getAttribute('src'));
+			$img->removeAttribute('src');
+
+			// Replace <img> with <noscript> then reinsert <img> before <noscript>
+			$img->parentNode->replaceChild($noscript, $img);
+			$noscript->parentNode->insertBefore($img, $noscript);
+		}
+		$dom->saveChanges();
 	}
 }
