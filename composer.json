@@ -2,7 +2,7 @@
    "name": "rubencm/lazyload",
    "type": "phpbb-extension",
    "description": "",
-   "version": "1.0.0-beta1",
+   "version": "1.0.0",
    "license": "GPL-2.0",
    "authors": [{
       "name": "rubencm"
@@ -14,7 +14,7 @@
    "extra": {
       "display-name": "LazyLoad for post images",
       "soft-require" : {
-         "phpbb/phpbb": ">=3.2.0,<3.3.*@dev"
+         "phpbb/phpbb": ">=3.2.0,<3.3@dev"
       }
    }
 }
