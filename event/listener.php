@@ -10,7 +10,6 @@
 
 namespace rubencm\lazyload\event;
 
-use DOMXPath;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
 /**
@@ -53,7 +52,7 @@ class listener implements EventSubscriberInterface
 	{
 		$tag   = $event['configurator']->tags['img'];
 		$dom   = $tag->template->asDOM();
-		$xpath = new DOMXPath($dom);
+		$xpath = new \DOMXPath($dom);
 		foreach ($xpath->query('//img[@src]') as $img)
 		{
 			// Create a <noscript> element that contains a copy of the original <img>
